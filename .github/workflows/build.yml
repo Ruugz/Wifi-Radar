@@ -19,6 +19,14 @@ jobs:
         with:
           gradle-version: 8.7
 
+      - name: Ekstrak WifiRadar.zip (kalau ada)
+        run: |
+          z=$(find . -iname "WifiRadar*.zip" -not -path "./.git/*" | head -n1)
+          if [ -n "$z" ]; then
+            echo "Ekstrak $z"
+            unzip -oq "$z" -d _project
+          fi
+
       - name: Cari folder proyek
         id: find
         run: |
@@ -26,6 +34,7 @@ jobs:
           if [ -z "$f" ]; then
             echo "settings.gradle.kts tidak ditemukan. Isi repo:"; ls -R | head -50; exit 1
           fi
+          echo "Proyek di: $f"
           echo "dir=$(dirname "$f")" >> "$GITHUB_OUTPUT"
 
       - name: Build debug APK
